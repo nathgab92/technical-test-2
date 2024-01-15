@@ -39,6 +39,28 @@ const Detail = ({ user }) => {
     history.push(`/user`);
   }
 
+  async function updateData(values) {
+    try {
+      const updatedUser = await api.put(`/user/${user._id}`, {
+        name: values.name,
+        email: values.email,
+        status: values.status,
+        job_title: values.job_title,
+        days_worked: values.days_worked,
+        costPerDay: values.costPerDay,
+        sellPerDay: values.sellPerDay,
+        description: values.description,
+      });
+      toast.success("updated successfully!");
+
+    } catch (error) {
+      console.error("Error updating user data:", error);
+      toast.error("Failed to update user data!");
+    }
+  }
+
+
+
   return (
     <Formik
       initialValues={user}
@@ -60,7 +82,6 @@ const Detail = ({ user }) => {
                 <input
                   className="projectsInput text-[14px] font-normal text-[#212325] bg-[#F9FBFD] rounded-[10px]"
                   name="name"
-                  disabled
                   value={values.name}
                   onChange={handleChange}
                 />
@@ -132,7 +153,7 @@ const Detail = ({ user }) => {
             </div>
 
             <div className="flex  mt-2">
-              <LoadingButton className="bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" loading={isSubmitting} onChange={handleSubmit}>
+              <LoadingButton className="bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" loading={isSubmitting} onClick={() => updateData(values)} >
                 Update
               </LoadingButton>
               <button className="ml-[10px] bg-[#F43F5E] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" onClick={deleteData}>

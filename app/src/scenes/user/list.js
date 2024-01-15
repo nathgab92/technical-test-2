@@ -32,7 +32,7 @@ const NewList = () => {
         .filter((u) => !filter?.status || u.status === filter?.status)
         .filter((u) => !filter?.contract || u.contract === filter?.contract)
         .filter((u) => !filter?.availability || u.availability === filter?.availability)
-        .filter((u) => !filter?.search || u.name.toLowerCase().includes(filter?.search.toLowerCase())),
+        .filter((u) => !filter?.search || (u.name && u.name.toLowerCase().includes(filter?.search.toLowerCase()))),
     );
   }, [users, filter]);
 
@@ -112,16 +112,21 @@ const Create = () => {
                   values.availability = "not available";
                   values.role = "ADMIN";
                   const res = await api.post("/user", values);
+                  if (!values.username || !values.email || !values.password) {
+                    toast.error("all fields required");
+                  } else {
                   if (!res.ok) throw res;
                   toast.success("Created!");
                   setOpen(false);
                   history.push(`/user/${res.data._id}`);
+                }
                 } catch (e) {
-                  console.log(e);
                   toast.error("Some Error!", e.code);
                 }
                 setSubmitting(false);
               }}>
+
+                
               {({ values, handleChange, handleSubmit, isSubmitting }) => (
                 <React.Fragment>
                   <div>
@@ -247,7 +252,7 @@ const UserCard = ({ hit, projects }) => {
       {/* infos */}
       <div className="flex flex-col flex-1 justify-between">
         <div className="flex flex-col items-center text-center my-4 space-y-1">
-          <p className="font-semibold text-lg">{hit.name}</p>
+        <p className={`font-semibold text-lg ${hit.days_worked > 20 ? 'text-red-500' : ''}`}>{hit.name} ({hit.days_worked})</p>
         </div>
       </div>
     </div>

@@ -21,15 +21,17 @@ export default () => {
   if (!user) return <Loader />;
 
   async function handleSubmit(e) {
+
     e.preventDefault();
     setIsLoading(true);
+
+
     let body = values;
     try {
       const responseData = await api.put(`/user/${user._id}`, body);
       toast.success("Updated!");
       dispatch(setUser(responseData.user));
     } catch (e) {
-      console.log(e);
       toast.error("Some Error!");
     }
     setIsLoading(false);
